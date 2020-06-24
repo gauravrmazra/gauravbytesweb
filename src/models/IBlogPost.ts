@@ -5,6 +5,7 @@ interface IBlogPost {
   author: string
   postedOn: string
   tags: string[]
+  postUrl: string
 }
 
 export default IBlogPost;

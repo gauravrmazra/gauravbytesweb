@@ -8,7 +8,7 @@ function BlogPost() {
   return !!post ? (
     <div className={styles['blog-post']}>
       <div className={styles['blog-post-title']}>{post.title}</div>
-      <div className={styles['blog-post-body']}>{post.content}</div>
+      <div className={styles['blog-post-body']}>{post.content}<a href={post.postUrl}>Read more</a></div>
       <div className={styles['blog-post-footer']}>
         <div className={styles['blog-author']}>{`By ${post.author} at ${post.postedOn}`}</div>
         <div className={styles['blog-tags']}>

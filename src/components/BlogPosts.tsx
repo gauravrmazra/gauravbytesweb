@@ -7,8 +7,8 @@ import BlogPost from './BlogPost';
 function BlogPosts() {
   return (
     <div className={styles["blog-container"]}>
-      <BlogListing/>
       <BlogPost/>
+      <BlogListing/>
     </div>
   );
 }
