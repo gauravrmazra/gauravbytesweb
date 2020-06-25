@@ -30,8 +30,8 @@ interface IProps {
        <div className={styles['container']}>
          <div className={styles['big-box']}>
            <h1 className={styles['big-box-title']}>Hello Reader!</h1>
-           <p className={styles['big-box-p']}>We are making changes to our site!</p>
-           <p className={styles['big-box-p']}><code className={styles['code']}>https://gauravbytes.com</code> is moving to <a className={styles['big-box-a']} href="https://www.codefoundry.dev"><code className={styles['code']}>https://codefoundry.dev</code></a></p>
+           <p className={styles['big-box-p']}>We have made changes to our site!</p>
+           <p className={styles['big-box-p']}><code className={styles['code']}>https://gauravbytes.com</code> is now <a className={styles['big-box-a']} href="https://www.codefoundry.dev"><code className={styles['code']}>https://codefoundry.dev</code></a></p>
            {!!prop.path && <hr className={styles['big-box-hr']} />}
            {!!prop.path && <p>The new url to see this post is: <a className={styles['big-box-a']} href={url}><code className={styles['code-r']}>{url}</code></a></p>}
          </div>
