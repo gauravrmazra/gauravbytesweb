@@ -10,9 +10,6 @@ export default class MyDocument extends Document {
         <meta content='https://www.codefoundry.dev/' property='og:url'/>
         <meta content='Gaurav Bytes' property='og:title'/>
         <meta content='Tutorials for Java, Java 8, Spring, Spring Cloud, Spring Boot, Apache Avro, concurrency, Design patterns,  Executor Framework, Java concurrency' property='og:description'/>
-        <title>
-              Tutorials for Java, React JS, Redux, NexJS, Full Stack development, Spring, Apache Avro, Concurrency, Executor Framework, Java 8, Spring Cloud, Spring Boot, Big Data, Data Analytics
-        </title>
         <meta content='Java Programming, Spring framework, Spring Cloud, Spring Boot, Tutorials for Java, Apache Avro, Java concurrency, Java interview questions answers, Big Data, Data analytics, Elasticsearch, React, React JS, React Redux, Node.JS' name='keywords'/>
         <meta content='en_US' property='og:locale'/>
         <meta content='en_GB' property='og:locale:alternate'/>
