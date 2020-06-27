@@ -2,6 +2,7 @@ import IBlogPost from "../../models/IBlogPost";
 import { SearchOnFields } from "../../models/SearchOnFields";
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../redux/store';
+import BloggerService from '../../service/BloggerService'
 
 interface BlogPostsState {
   showingPost: IBlogPost | null
@@ -32,54 +33,8 @@ const initialState: BlogPostsState = {
   bloggerPostsError: null
 }
 
-declare type BloggerEntry = {
-  id: {
-    $t: string
-  },
-  updated: {
-    $t: string
-  },
-  published: {
-    $t: string
-  },
-  category: Array<{scheme: string, term: string}>,
-  title: {
-    $t: string
-  },
-  summary: {
-    $t: string
-  },
-  author: Array<{name: { $t: string }}>,
-  link: Array<{ rel: string, href: string }>
-}
-
 export const getBloggerPosts = createAsyncThunk('blogggerPosts/all', async(thunkAPI) => {
-  const response = await fetch('https://www.blogger.com/feeds/5554118637855932326/posts/summary?alt=json&start-index=1&max-results=100')
-  const result = await response.json();
-  const categories = result?.feed?.category ?? [];
-  const allTags = (categories as Array<{term: string}>).map(category => category.term)
-  const entries = result?.feed?.entry ?? [];
-  const posts = (entries as Array<BloggerEntry>).map(entry => {
-    const id = entry.id.$t;
-    const datePublishedOrUpdated = entry.updated.$t || entry.published.$t;
-    const tags = entry.category.map(cat => cat.term);
-    const title = entry.title.$t;
-    const content = entry.summary.$t;
-    const author = entry.author.map(a => a.name.$t).join(', ')
-    const postLink = entry.link.find(l => l.rel === 'alternate');
-    const postUrl = !!postLink ? postLink.href : '';
-
-    return {
-      id,
-      tags,
-      title,
-      content,
-      author,
-      postUrl,
-      postedOn: datePublishedOrUpdated
-    }
-  })
-  return { allTags, posts };
+  return await BloggerService.getAllPosts();
 })
 
 const findFirstPost = (posts: IBlogPost[]) : IBlogPost | null => !!posts && posts.length > 0 ? posts[0] : null;
@@ -88,6 +43,10 @@ const blogPostsSlice = createSlice({
   name: 'blogPosts',
   initialState,
   reducers: {
+    setPosts: (state, action: PayloadAction<{ allTags: string[], posts: IBlogPost[] }>) => {
+      state.bloggerPosts = action.payload;
+      state.showingPost = findFirstPost(action.payload.posts);
+    },
     setShowingPost: (state, action: PayloadAction<string>) => {
       const newShowingPost = state?.bloggerPosts.posts.find(post => post.id === action.payload) ?? undefined;
       state.showingPost = newShowingPost ?? null
@@ -123,7 +82,7 @@ const blogPostsSlice = createSlice({
     }).addCase(getBloggerPosts.fulfilled, (state, action) => {
       state.isLoadingBloggerPosts = false;
       state.bloggerPosts = action.payload;
-      state.showingPost = findFirstPost(state.bloggerPosts.posts)
+      state.showingPost = findFirstPost(state.bloggerPosts.posts);
     })
   }
 });
@@ -133,6 +92,12 @@ const setShowingPostsAsync = (id: string) : AppThunk => dispatch => {
     dispatch(setShowingPost(id))
   }, 500)
 };
+
+const setPostsAsync = (bloggerPosts: { allTags: string[], posts: IBlogPost[] }): AppThunk => dispatch => {
+  setTimeout(() => {
+    dispatch(setPosts(bloggerPosts))
+  })
+}
 
 const onSearchAsync = (): AppThunk => dispatch => {
   setTimeout(() => {
@@ -156,12 +121,12 @@ const selectSelectedSearchOn = (state: RootState) => state.blogPosts.selectedSea
 const listingPosts = (posts: IBlogPost[]) => posts?.map(post => { return { id: post.id, title: post.title }}) ?? [];
 
 
-const { setSearchText, setSelectedSearchOn, setShowingPost, onSearch } = blogPostsSlice.actions;
+const { setPosts, setSearchText, setSelectedSearchOn, setShowingPost, onSearch } = blogPostsSlice.actions;
 
 // Selector functions
 export { selectPosts, selectShowingPost, selectPostsForListing, selectShowingPostId, selectSearchText, selectSelectedSearchOn }
 
 // action functions
-export { setShowingPostsAsync, onSearchAsync, setSearchText, setSelectedSearchOn, setShowingPost, onSearch }
+export { setPosts, setPostsAsync, setShowingPostsAsync, onSearchAsync, setSearchText, setSelectedSearchOn, setShowingPost, onSearch }
 
 export default blogPostsSlice.reducer;
