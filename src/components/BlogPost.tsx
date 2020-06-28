@@ -1,10 +1,13 @@
 import React from 'react';
 import styles from './BlogPost.module.css';
-import { useSelector } from 'react-redux';
-import { selectShowingPost } from '../redux/reducer/blogPostsSlice';
+import IBlogPost from '../models/IBlogPost';
 
-function BlogPost() {
-  const post = useSelector(selectShowingPost);
+interface IBlogPostProps {
+  post: IBlogPost
+}
+
+function BlogPost(props: IBlogPostProps) {
+  const post = props.post;
   return !!post ? (
     <div className={styles['blog-post']}>
       <div className={styles['blog-post-title']}>{post.title}</div>
